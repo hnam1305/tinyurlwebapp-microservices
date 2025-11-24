@@ -1,0 +1,13 @@
+# Visual Studio Solution files (Ignore temporary cache files)
+.vs/
+*.suo
+
+# Ignore build artifacts (Output folders)
+[Bb]in/
+[Oo]bj/
+
+# Ignore Docker cache files
+*.dockerignore
+
+# Ignore NuGet packages folder
+packages/

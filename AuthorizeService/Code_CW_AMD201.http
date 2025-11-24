@@ -1,0 +1,6 @@
+@Code_CW_AMD201_HostAddress = http://localhost:5194
+
+GET {{Code_CW_AMD201_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

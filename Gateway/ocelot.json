@@ -1,0 +1,49 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{shortId}",
+      "UpstreamPathTemplate": "/{shortId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shortenurl",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/{everything}",
+      "UpstreamPathTemplate": "/auth/{everything}",
+      "UpstreamHttpMethod": [ "POST", "GET" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8084
+        }
+      ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/shorten/{everything}",
+      "UpstreamPathTemplate": "/shorten/{everything}",
+      "UpstreamHttpMethod": [ "POST", "GET", "DELETE" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shortenurl",
+          "Port": 8080
+        }
+      ],
+      "DownstreamHeaderTransform": {
+        "Authorization": "Bearer {Authorization}"
+      }
+    }
+
+  ],
+
+  "GlobalConfiguration": {
+    "BaseUrl": "http://gateway:8082"
+  }
+}

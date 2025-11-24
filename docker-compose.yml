@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  shortenurl:
+    image: hainammeomeo05/tinyurlwebapp-shortenurl:1.0
+    build:
+      context: ./ShortenUrl
+      dockerfile: Dockerfile
+    ports:
+      - "7001:8080" 
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - AppConfig:PublicBaseUrl=http://localhost:7000 
+      - Mongo:ConnectionString=mongodb://mongo:27017
+      - Mongo:Database=tinyurl
+      - JwtSettings:SecretKey=THIS_IS_A_VERY_LONG_AND_SECURE_SECRET_KEY_1234567890    
+    depends_on:
+      - mongo 
+
+  authservice:
+    image: hainammeomeo05/tinyurlwebapp-authservice:1.0
+    build:
+      context: ./AuthorizeService
+      dockerfile: Dockerfile
+    ports:
+      - "7002:8084"
+    environment:
+      - ASPNETCORE_URLS=http://+:8084
+      - Mongo:ConnectionString=mongodb://mongo:27017 
+      - JwtSettings:SecretKey=THIS_IS_A_VERY_LONG_AND_SECURE_SECRET_KEY_1234567890   
+    depends_on:
+      - mongo
+      
+  gateway: 
+    image: hainammeomeo05/tinyurlwebapp-gateway:1.0
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile
+    ports:
+      - "7000:8082" 
+    environment:
+      - ASPNETCORE_URLS=http://+:8082
+      - JwtSettings:SecretKey=THIS_IS_A_VERY_LONG_AND_SECURE_SECRET_KEY_1234567890
+    depends_on:
+      - shortenurl 
+      - authservice
+
+  client:
+    image: hainammeomeo05/tinyurlwebapp-client:1.0
+    build:
+      context: ../client/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "7003:80" 
+    depends_on:
+      - gateway 
+
+  mongo:
+    image: mongo:latest
+    container_name: tinyurlwebapp-mongo-1
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+    driver: local
