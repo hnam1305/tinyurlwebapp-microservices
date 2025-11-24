@@ -1,0 +1,166 @@
+
+.login-page {
+  display: flex;
+  height: 91vh;
+  width: 100%;
+}
+
+
+.login-left {
+  flex: 1;
+  background-image: url('@/assets/login-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: relative;
+}
+
+.overlay-text {
+  text-align: center;
+  z-index: 2;
+}
+
+
+.login-right {
+  flex: 1;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 360px;
+  text-align: left;
+}
+
+.logo-text {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #1a4b84;
+  margin-bottom: 0.5em;
+}
+
+.logo-text span {
+  color: #4a75e0;
+}
+
+.title {
+  font-size: 2em;
+  font-weight: 800;
+  margin-bottom: 1.5em;
+}
+
+.ui.form .field label {
+  font-weight: 500;
+  color: #333;
+}
+
+.ui.form .field input {
+  border: none;
+  border-bottom: 2px solid #1a4b84;
+  border-radius: 0;
+  outline: none;
+  padding: 0.6em 0.2em;
+  font-size: 1em;
+  margin-bottom: 1em;
+}
+
+.ui.button.primary.login-btn {
+  width: 100%;
+  background-color: #1a345f;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-bottom: 0.7em;
+  height: 45px;
+}
+
+.ui.button.secondary.register-btn {
+  width: 100%;
+  background-color: #2b4d84;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  height: 45px;
+}
+
+.forgot {
+    text-align: center;
+    font-size: 0.95em;
+    color: #1a4b84;
+    font-weight: 600;
+    text-decoration: underline;
+}
+/* Form */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2em 2.5em;
+  border-radius: 20px;
+  width: 420px;
+  max-width: 90%;
+  text-align: left;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-size: 22px;
+  color: red;
+  cursor: pointer;
+}
+
+.register-logo {
+  text-align: center;
+  color: #1a4b84;
+  font-size: 1.6em;
+  font-weight: 700;
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 1.5em;
+  color: #333;
+  font-weight: 600;
+}
+
+.create-btn {
+  width: 100%;
+  background-color: #1a345f;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  height: 45px;
+  margin-top: 0.5em;
+}
+
+.switch-text {
+  text-align: center;
+  margin-top: 1em;
+  font-size: 0.95em;
+}
+
+.switch-text a {
+  color: #1a4b84;
+  font-weight: 600;
+  text-decoration: underline;
+}

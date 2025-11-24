@@ -48,7 +48,7 @@ services:
   client:
     image: hainammeomeo05/tinyurlwebapp-client:1.0
     build:
-      context: ../client/frontend
+      context: ./client/frontend
       dockerfile: Dockerfile
     ports:
       - "7003:80" 

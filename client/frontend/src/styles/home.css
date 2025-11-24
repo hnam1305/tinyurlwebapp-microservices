@@ -1,0 +1,110 @@
+
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.background {
+  width: 100%;
+  height: 70vh;
+  background-image: url('@/assets/greenwich-bg.png');
+  background-size: cover;
+  background-position: center;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  color: white;
+}
+.howitwork{
+  width: 100%;
+  height: 40vh;
+  background-image: url('@/assets/howitwork.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  color: white;
+}
+.overlay-content {
+  max-width: 800px;
+  z-index: 2;
+}
+
+.main-title {
+  font-size: 4em;
+  font-weight: 700;
+  margin-bottom: 0.4em;
+}
+
+.subtitle {
+  font-size: 1.8em;
+  margin-bottom: 1.5em;
+  opacity: 0.9;
+}
+
+.url-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Input URL chính (bên trái) */
+.url-input input[type="text"]:first-child {
+  width: 450px;
+  height: 50px;
+  font-size: 1.05em;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px; /* bo góc trái */
+  border-right: none; /* nối liền với alias */
+  padding: 0 10px;
+  outline: none;
+}
+
+/* Input alias (bên phải URL, trước nút Shorten) */
+.url-input .alias {
+  width: 150px;
+  height: 50px;
+  font-size: 1.05em;
+  border: 1px solid #ccc;
+
+  border-radius: 0 8px 8px 0;   /* không bo góc */
+  padding: 0 10px;
+  outline: none;
+  margin-left: -1px; /* xóa khoảng cách border */
+}
+
+.shortUrl input{
+  width: 450px;
+  height: 50px;
+  font-size: 1.05em;
+  border-radius: 8px 0 0 8px;
+  border: none;
+  padding: 0 1em;
+}
+
+.ui.button.primary{
+  background-color: #132e71;
+  height: 50px;
+  font-size: 1.05em;
+  padding: 0 1.5em;
+}
+
+.url-input .ui.button.primary {
+  background-color: #32519f;
+  border-radius: 0 8px 8px 0;
+  height: 50px;
+  font-size: 1.05em;
+  padding: 0 1.5em;
+}
