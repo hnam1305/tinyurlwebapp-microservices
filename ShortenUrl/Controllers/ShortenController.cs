@@ -16,15 +16,15 @@ namespace ShortenUrl.Controllers
     [ApiController]
     public class ShortenController : ControllerBase
     {
-        private readonly MongoDbContext _db;
+        private readonly IShortUrlRepository _repo;
         private readonly IConfiguration _config;
-        public ShortenController(MongoDbContext db, IConfiguration config)
+
+        public ShortenController(IShortUrlRepository repo, IConfiguration config)
         {
-            _db = db;
+            _repo = repo;
             _config = config;
         }
 
-  
         public class CreateRequest
         {
             public string Url { get; set; } = "";
@@ -50,7 +50,6 @@ namespace ShortenUrl.Controllers
             return output;
         }
 
-
         private string? GetUserId()
         {
             if (User?.Identity == null || !User.Identity.IsAuthenticated)
@@ -71,7 +70,6 @@ namespace ShortenUrl.Controllers
             return null;
         }
 
-    
         [AllowAnonymous]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateRequest req)
@@ -84,7 +82,7 @@ namespace ShortenUrl.Controllers
 
             string id;
 
-      
+            // ALIAS CASE
             if (!string.IsNullOrEmpty(req.Alias))
             {
                 if (req.Alias.Length > 5)
@@ -92,16 +90,17 @@ namespace ShortenUrl.Controllers
 
                 id = req.Alias;
 
-                var exists = await _db.ShortUrls.Find(x => x.ShortId == id).FirstOrDefaultAsync();
+                var exists = await _repo.GetAlias(id);
                 if (exists != null)
                     return Conflict("Alias already exists.");
             }
             else
             {
+                // RANDOM ID LOOP
                 do
                 {
                     id = GenerateRandomId();
-                    var exists = await _db.ShortUrls.Find(x => x.ShortId == id).FirstOrDefaultAsync();
+                    var exists = await _repo.GetAlias(id);
                     if (exists == null) break;
                 } while (true);
             }
@@ -116,9 +115,9 @@ namespace ShortenUrl.Controllers
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _db.ShortUrls.InsertOneAsync(item);
-            string baseUrl = _config["AppConfig:PublicBaseUrl"] ?? $"{Request.Scheme}://{Request.Host}";
+            await _repo.InsertAsync(item);
 
+            string baseUrl = _config["AppConfig:PublicBaseUrl"] ?? $"{Request.Scheme}://{Request.Host}";
             string generated = $"{baseUrl}/{id}";
 
             return Ok(new
@@ -128,21 +127,17 @@ namespace ShortenUrl.Controllers
                 shortUrl = generated
             });
         }
-        
 
         [Authorize]
         [HttpGet("history")]
         public async Task<IActionResult> History()
         {
             var userId = GetUserId();
-
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User not logged in.");
 
-            var items = await _db.ShortUrls
-                .Find(x => x.UserId == userId)
-                .SortByDescending(x => x.CreatedAt)
-                .ToListAsync();
+            var items = await _repo.GetUserHistory(userId);
+
             string baseUrl = _config["AppConfig:PublicBaseUrl"] ?? $"{Request.Scheme}://{Request.Host}";
             var result = items.Select(x => new
             {
@@ -160,19 +155,17 @@ namespace ShortenUrl.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var userId = GetUserId();
-
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User not logged in.");
 
-            var result = await _db.ShortUrls.DeleteOneAsync(
-                x => x.ShortId == id && x.UserId == userId
-            );
+            var success = await _repo.DeleteUserShortUrl(id, userId);
 
-            if (result.DeletedCount == 0)
+            if (!success)
                 return NotFound("Short URL not found or not owned by user.");
 
             return Ok("Deleted successfully.");
         }
+
         [Authorize]
         [HttpPost("edit")]
         public async Task<IActionResult> Edit([FromBody] EditRequest req)
@@ -188,35 +181,29 @@ namespace ShortenUrl.Controllers
             if (req.NewId.Length > 5)
                 return BadRequest("Id cannot be longer than 5");
 
-            var exist = await _db.ShortUrls.Find(x => x.ShortId == req.NewId).FirstOrDefaultAsync();
+            var exist = await _repo.GetAlias(req.NewId);
             if (exist != null)
                 return BadRequest("Id already exist");
 
-            var url = await _db.ShortUrls.Find(x => x.ShortId == req.OldId && x.UserId == userId).FirstOrDefaultAsync();
-            if (url == null)
+            var updated = await _repo.UpdateShortId(req.OldId, req.NewId, userId);
+            if (!updated)
                 return BadRequest("This url is not available for this user");
-
-            url.ShortId = req.NewId;
-            await _db.ShortUrls.ReplaceOneAsync(x => x.Id == url.Id, url);
 
             return Ok("Updated");
         }
+
         [AllowAnonymous]
         [HttpGet("~/{id}")]
         public async Task<IActionResult> RedirectToUrl(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-            {
                 return NotFound();
-            }
 
-            
-            var item = await _db.ShortUrls.Find(x => x.ShortId == id).FirstOrDefaultAsync();
+            var item = await _repo.GetByShortId(id);
 
             if (item == null)
-            {
                 return NotFound($"Short URL with ID '{id}' not found.");
-            };
+
             return Redirect(item.OriginalUrl);
         }
     }

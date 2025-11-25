@@ -7,7 +7,7 @@ using UrlShortener.Models;
 
 namespace UrlShortener.Services
 {
-    public class JwtService
+    public class JwtService : IJwtService
     {
         private readonly IConfiguration _config;
         

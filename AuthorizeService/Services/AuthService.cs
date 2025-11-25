@@ -4,9 +4,10 @@ using UrlShortener.Models;
 using System.Net.Mail;
 using System.Net;
 
+
 namespace UrlShortener.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly MongoDbContext _context;
         private readonly IConfiguration _config;
@@ -27,7 +28,7 @@ namespace UrlShortener.Services
         }
 
         
-        public async Task<bool> RegisterAsync(string username, string email, string password, string role = "User")
+        public async Task<bool> RegisterAsync(string username, string email, string password)
         {
             
             var exists = await _context.Users.Find(u => u.Username == username || u.Email == email).FirstOrDefaultAsync();
@@ -39,7 +40,7 @@ namespace UrlShortener.Services
                 Username = username,
                 Email = email,
                 PasswordHash = hash,
-                Role = role,
+                Role = "User",
                 ResetToken = null,
                 ResetTokenExpire = null
             };

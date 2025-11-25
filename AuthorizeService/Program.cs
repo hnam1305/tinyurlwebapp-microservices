@@ -6,6 +6,7 @@ using System.Text;
 using UrlShortener.Data;
 using UrlShortener.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Load appsettings.json
@@ -13,10 +14,10 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 // MongoDB
 builder.Services.AddSingleton<MongoDbContext>();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<JwtService>();
 
-
+//UNIT TEst
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 // check db
 try
 {
