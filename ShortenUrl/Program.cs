@@ -22,7 +22,8 @@ namespace ShortenUrl
 
             //add appsetting
             builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
+            //unit test
+            builder.Services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
             //connect mongo
             builder.Services.AddSingleton<MongoDbContext>();
             builder.Services.AddControllers();
