@@ -20,7 +20,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "authservice",
-          "Port": 8084
+          "Port": 8081
         }
       ]
     },

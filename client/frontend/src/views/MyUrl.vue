@@ -1,7 +1,7 @@
 <template>
   <div class="ui container" style="padding-top: 40px; padding-bottom: 40px;">
     <h1 class="ui header" style="font-size: 36px; color:#1e3a8a; text-align:center;">Your Shortened Links</h1>
-    <p style="text-align:center; color: gray; margin-bottom: 40px;">Manage and track all links you've shortened</p>
+    <p style="text-align:center; color: gray; margin-bottom: 40px;">Manage and track all links you've shortened \\ {{ShortUrls.length}}</p>
 
     <div class="ui stackable two column grid">
       <div class="column" v-for="item in ShortUrls" :key="item.shortId">
